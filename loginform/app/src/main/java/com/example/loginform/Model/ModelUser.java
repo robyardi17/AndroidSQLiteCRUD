@@ -6,24 +6,25 @@ public class ModelUser {
     private String Password;
     private String Nomor;
     private String Alamat;
-    private Int id;
+    private Integer id;
 
-    public ModelUser(String Username, String Password, String Alamat, String Nomor){
+    public ModelUser(String Username, String Password, String Alamat, String Nomor, Integer ID){
         this.Username = Username;
         this.Password = Password;
         this.Alamat = Alamat;
         this.Nomor = Nomor;
+        this.id = ID;
     }
 
     public ModelUser() {
 
     }
 
-    public Int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -59,10 +60,4 @@ public class ModelUser {
         Alamat = alamat;
     }
 
-    public void setId(int parseInt) {
-        this.id = id;
-    }
-
-    private class Int {
-    }
 }

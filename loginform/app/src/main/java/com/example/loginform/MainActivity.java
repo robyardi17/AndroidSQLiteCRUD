@@ -15,11 +15,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.loginform.Adapter.UserRecycleAdapter;
 import com.example.loginform.Database.DatabaseHelper;
 import com.example.loginform.Model.ModelUser;
+import com.example.loginform.Model.ProductModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,30 +33,43 @@ public class MainActivity extends AppCompatActivity {
     UserRecycleAdapter userRecycleAdapter;
     DatabaseHelper sqliteHelper;
     SharedPreferences sharedPreferences;
+    TextView textViewUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         recyclerView = findViewById(R.id.recyclerViewUsers);
+        textViewUser = findViewById(R.id.user);
         sharedPreferences = MainActivity.this.getSharedPreferences("username", Context.MODE_PRIVATE);
         modelUsers = new ArrayList<>();
         sqliteHelper = new DatabaseHelper(MainActivity.this);
 
-        String userFromIntent = getIntent().getStringExtra("Username");
-        Toast.makeText(MainActivity.this, "Selamat datang " + userFromIntent, Toast.LENGTH_LONG).show();
+        String namaShare = sharedPreferences.getString("uname", "");
+        textViewUser.setText("User : " + namaShare);
 
 //        getDataFromSQLite();
         Log.e("TAG", "onCreate: " + sqliteHelper.getAllUser() );
         modelUsers = sqliteHelper.getAllUser();
 
-        userRecycleAdapter = new UserRecycleAdapter(modelUsers);
+        userRecycleAdapter = new UserRecycleAdapter(this, modelUsers);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(userRecycleAdapter);
 
+
+
+        List<ProductModel> listProduct = new ArrayList<>();
+        for (int i=0; i<2; i++) {
+            ProductModel model = new ProductModel();
+            model.setId_product(1001+i);
+            model.setProduct("Poduct "+i);
+
+            listProduct.add(model);
+            sqliteHelper.addProduct(model);
+        }
     }
 
     // create an action bar button

@@ -35,26 +35,22 @@ public class RegisterActivity extends AppCompatActivity {
         buttonSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String UserName = etUsername.getText().toString();
-                String Nomor = etNomor.getText().toString();
-                String Password = etPassword.getText().toString();
-                String Alamat = etAlamat.getText().toString();
+                String UserName = etUsername.getText().toString().trim();
+                String Nomor = etNomor.getText().toString().trim();
+                String Password = etPassword.getText().toString().trim();
+                String Alamat = etAlamat.getText().toString().trim();
 
-                if (UserName.isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, "Username tidak boleh kosong", Toast.LENGTH_LONG).show();
-                }
-
-                if (Password.isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, "Password tidak boleh kosong!", Toast.LENGTH_LONG).show();
+                if (UserName.isEmpty() || Password.isEmpty()) {
+                    Toast.makeText(RegisterActivity.this, "Username/Password tidak boleh kosong", Toast.LENGTH_LONG).show();
                 } else {
                     if (Password.length() > 5) {
                         if (!sqliteHelper.checkUser(UserName)) {
-                            sqliteHelper.addUser(new ModelUser(UserName, Password, Alamat, Nomor));
+                            sqliteHelper.addUser(new ModelUser(UserName, Password, Alamat, Nomor, null));
                             Toast.makeText(RegisterActivity.this, "User sukses terdaftar! Silahkan Login ", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(RegisterActivity.this, "User "+ UserName + "sudah terdaftar, coba lagi", Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterActivity.this, "User "+ UserName + " sudah terdaftar, coba lagi", Toast.LENGTH_LONG).show();
                         }
                     } else {
                         Toast.makeText(RegisterActivity.this, "Password terlalu pendek!", Toast.LENGTH_LONG).show();

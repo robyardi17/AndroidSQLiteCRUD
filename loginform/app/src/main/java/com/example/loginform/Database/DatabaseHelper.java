@@ -5,8 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.loginform.Model.ModelUser;
+import com.example.loginform.Model.ProductModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +16,20 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "tes1";
     public static final int DATABASE_VERSION = 1;
+    /** table **/
     public static final String TABLE_USERS = "users";
+    public static final String TABLE_PRODUCT = "product";
+
     public static final String KEY_ID = "id";
     public static final String KEY_USER_NAME = "username";
     public static final String KEY_NOMOR = "nomor";
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_ALAMAT = "alamat";
+
+    public static final String KEY_ID_PRODUCT = "id_product";
+    public static final String KEY_PRODUCT = "nama_product";
+
+//    SELECT a.`id_penjualan`,b.username,c.produk,c.harga, a.`qty_penjualan`,(c.harga*a.`qty_penjualan`) total FROM `penjualan` a join user b on a.id_user=b.id_user join table_produk c on a.id_produk=c.id_produk
 
     public static final String SQL_TABLE_USERS = " CREATE TABLE " + TABLE_USERS
             + " ( "
@@ -31,6 +41,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + " ) ";
 
 
+    public static final String SQL_TABLE_PRODUCT = " CREATE TABLE " + TABLE_PRODUCT
+            + " ( "
+            + KEY_ID_PRODUCT + " INTEGER PRIMARY KEY, "
+            + KEY_PRODUCT + " TEXT "
+            + " ) ";
+
+
+
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -38,12 +57,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(SQL_TABLE_USERS);
-
+        sqLiteDatabase.execSQL(SQL_TABLE_PRODUCT);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL(" DROP TABLE IF EXISTS " + TABLE_USERS);
+        sqLiteDatabase.execSQL(" DROP TABLE IF EXISTS " + TABLE_PRODUCT);
     }
 
     public void addUser(ModelUser user) {
@@ -69,10 +89,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String sortOrder = KEY_USER_NAME + " ASC";
         List<ModelUser> userList = new ArrayList<ModelUser>();
         SQLiteDatabase db = this.getReadableDatabase();
-        // query the user table
-        /**
-         * SELECT user_id,user_name,password FROM users ORDER BY user_name;
-         */
         Cursor cursor = db.query(TABLE_USERS, //Table to query
                 columns,    //columns to return
                 null,        //columns for the WHERE clause
@@ -101,6 +117,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_USER_NAME, user.getUsername());
         values.put(KEY_PASSWORD, user.getPassword());
+        values.put(KEY_NOMOR, user.getNomor());
+        values.put(KEY_ALAMAT, user.getAlamat());
         // updating row
         db.update(TABLE_USERS, values, KEY_ID + " = ?",
                 new String[]{String.valueOf(user.getId())});
@@ -155,5 +173,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
         }
         return false;
+    }
+
+    /** Product **/
+    public void addProduct(ProductModel model) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_ID_PRODUCT, model.getId_product());
+        values.put(KEY_PRODUCT, model.getProduct());
+        db.insert(TABLE_PRODUCT, null, values);
+        db.close();
     }
 }

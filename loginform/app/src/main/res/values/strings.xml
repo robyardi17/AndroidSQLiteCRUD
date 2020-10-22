@@ -2,6 +2,7 @@
     <string name="app_name">Login</string>
     <string name="register_app">Register</string>
     <string name="main_app">Main Activity</string>
+    <string name="detail_app">Detail Activity</string>
     <string name="create_account"><font color="#00ff00">text</font></string>
     <string name="nomor">Nomor</string>
     <string name="password">Password</string>

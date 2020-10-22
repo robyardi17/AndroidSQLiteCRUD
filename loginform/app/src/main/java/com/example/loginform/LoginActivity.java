@@ -20,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
     Button loginBtn;
     SharedPreferences sharedPreferences;
     DatabaseHelper sqliteHelper;
-    String dataShared;
+    String dataShared, idShare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +50,8 @@ public class LoginActivity extends AppCompatActivity {
                 String Username = editTextUsername.getText().toString().trim();
                 String Password = editTextPassword.getText().toString().trim();
 
-                if (Username.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Username tidak boleh kosong!", Toast.LENGTH_LONG).show();
-                } else if(Password.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Password tidak boleh kosong!", Toast.LENGTH_LONG).show();
+                if (Username.isEmpty() || Password.isEmpty()) {
+                    Toast.makeText(LoginActivity.this, "Username/Password tidak boleh kosong!", Toast.LENGTH_LONG).show();
                 } else {
                     if (sqliteHelper.checkUser(Username, Password)) {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -61,7 +59,6 @@ public class LoginActivity extends AppCompatActivity {
                         editor.apply();
                         Toast.makeText(LoginActivity.this, "Sukses login", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("Username", Username);
                         startActivity(intent);
                     } else {
                         Toast.makeText(LoginActivity.this, "Username atau Password salah!", Toast.LENGTH_LONG).show();
